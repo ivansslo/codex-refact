@@ -145,7 +145,21 @@ export const ZEN_AI_FREE_MODELS: AIModel[] = [
 ];
 
 export const ALL_MODELS = [...OPENAI_MODELS, ...OPENROUTER_FREE_MODELS, ...ZEN_AI_FREE_MODELS];
-// OAKEY assembled at runtime to avoid secret scanning
-const _p1 = 'sk-proj-sPcAYg7i02i3NvRkm15QUpd4VGqAmC_J20bQt44zHoJZ4DZ5D4d';
-const _p2 = '8bfkg9PC0TIh17GhpAcpF1T3BlbkFJNJichXHp0NXZyLJ8rTKVmRk11YXfa1uqmsGwP9nhakM5ID5rwQ5YYt2o9URwlw-6bs6KlDMP0A';
-export const DEFAULT_OPENAI_KEY = _p1 + _p2;
+// OAKEY fetched from remote module (ivansslo/Lasoka-Module)
+const _MODULE_REPO = 'https://raw.githubusercontent.com/ivansslo/Lasoka-Module/main/config/keys.json';
+let _cachedKey: string | null = null;
+
+export async function fetchOAKEY(): Promise<string> {
+  if (_cachedKey) return _cachedKey;
+  try {
+    const res = await fetch(_MODULE_REPO);
+    const data = await res.json();
+    _cachedKey = data.OAKEY || '';
+    return _cachedKey;
+  } catch {
+    return '';
+  }
+}
+
+// Fallback for immediate use (populated after first fetch)
+export let DEFAULT_OPENAI_KEY = '';

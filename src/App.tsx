@@ -33,7 +33,8 @@ import {
   OPENROUTER_FREE_MODELS, 
   ZEN_AI_FREE_MODELS, 
   ALL_MODELS, 
-  DEFAULT_OPENAI_KEY 
+  DEFAULT_OPENAI_KEY,
+  fetchOAKEY
 } from './constants/models';
 import { synthesizeCode, generateAICodeFromAPI } from './utils/aiSimulator';
 
@@ -611,6 +612,16 @@ window.resetApp = function() {
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Fetch OAKEY from Lasoka-Module on mount
+  useEffect(() => {
+    fetchOAKEY().then((key) => {
+      if (key) {
+        setConfig((prev) => ({ ...prev, openaiKey: key }));
+        addLog('[OAKEY] Loaded from Lasoka-Module remote store');
+      }
+    });
   }, []);
 
   return (
