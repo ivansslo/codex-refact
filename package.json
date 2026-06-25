@@ -1,8 +1,35 @@
 {
-  "name": "react-vite-tailwind",
+  "name": "optimal-ai-codex",
   "private": true,
-  "version": "0.0.0",
+  "version": "4.0.0",
   "type": "module",
+  "description": "Optimal AI Codex — Next-Gen AI Workspace with multi-model support, sandbox preview, and autonomous code generation.",
+  "author": {
+    "name": "Ivan Ssl",
+    "url": "https://github.com/ivansslo",
+    "email": "ivansslo@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivansslo/codex-refact.git"
+  },
+  "homepage": "https://ivansslo.github.io/optimal-codex-live/",
+  "bugs": {
+    "url": "https://github.com/ivansslo/codex-refact/issues"
+  },
+  "keywords": [
+    "ai",
+    "codex",
+    "workspace",
+    "openai",
+    "gpt",
+    "code-generation",
+    "sandbox",
+    "react",
+    "vite",
+    "tailwind"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
