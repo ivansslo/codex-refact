@@ -673,52 +673,54 @@ window.resetApp = function() {
         </div>
 
         {/* Main Tab Switcher */}
-        <nav className="flex items-center bg-slate-950 border border-slate-800 p-1 rounded-xl">
-          <button 
-            onClick={() => setActiveTab('workspace')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              activeTab === 'workspace' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-            }`}
-          >
-            <Code className="h-3.5 w-3.5" /> Workspace
-          </button>
+        <div className="w-full overflow-x-auto hide-scrollbar sm:w-auto">
+          <nav className="flex items-center bg-slate-950 border border-slate-800 p-1 rounded-xl min-w-max">
+            <button 
+              onClick={() => setActiveTab('workspace')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap ${
+                activeTab === 'workspace' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+              }`}
+            >
+              <Code className="h-3.5 w-3.5" /> Workspace
+            </button>
 
-          <button 
-            onClick={() => setActiveTab('mcp_plugins')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              activeTab === 'mcp_plugins' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-            }`}
-          >
-            <Layers className="h-3.5 w-3.5 animate-pulse" /> GitHub MCP & Plugins
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab('compare')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              activeTab === 'compare' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-            }`}
-          >
-            <Sliders className="h-3.5 w-3.5" /> Compare Arena
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab('keys')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              activeTab === 'keys' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-            }`}
-          >
-            <Key className="h-3.5 w-3.5" /> Keys
-          </button>
+            <button 
+              onClick={() => setActiveTab('mcp_plugins')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap ${
+                activeTab === 'mcp_plugins' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+              }`}
+            >
+              <Layers className="h-3.5 w-3.5 animate-pulse" /> GitHub MCP & Plugins
+            </button>
+            
+            <button 
+              onClick={() => setActiveTab('compare')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap ${
+                activeTab === 'compare' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+              }`}
+            >
+              <Sliders className="h-3.5 w-3.5" /> Compare Arena
+            </button>
+            
+            <button 
+              onClick={() => setActiveTab('keys')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap ${
+                activeTab === 'keys' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+              }`}
+            >
+              <Key className="h-3.5 w-3.5" /> Keys
+            </button>
 
-          <button 
-            onClick={() => setActiveTab('templates')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${
-              activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-            }`}
-          >
-            <Compass className="h-3.5 w-3.5" /> Templates
-          </button>
-        </nav>
+            <button 
+              onClick={() => setActiveTab('templates')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap ${
+                activeTab === 'templates' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+              }`}
+            >
+              <Compass className="h-3.5 w-3.5" /> Templates
+            </button>
+          </nav>
+        </div>
       </header>
 
       {/* GITHUB MCP & CLAW-HUB SKILLS VIEW */}
@@ -1607,9 +1609,9 @@ window.resetApp = function() {
             <div className="p-4 border-b border-slate-800/60 bg-slate-900/40 flex flex-col md:flex-row justify-between items-center gap-4">
               
               {/* Sizing options */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider hidden sm:inline">Responsive Screen:</span>
-                <div className="flex bg-slate-950 border border-slate-850 p-1 rounded-xl">
+                <div className="responsive-toggles flex bg-slate-950 border border-slate-850 p-1 rounded-xl">
                   <button 
                     onClick={() => setPreviewSize('desktop')}
                     className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-[11px] font-semibold ${
@@ -1672,25 +1674,26 @@ window.resetApp = function() {
             </div>
 
             {/* LIVE PREVIEW IFRAME VIEW CONTAINER */}
-            <div className="flex-1 flex items-center justify-center p-6 bg-[#040815] overflow-hidden">
-              <div className="relative shadow-2xl rounded-2xl border border-slate-850 bg-slate-950 transition-all duration-300 h-full flex flex-col"
+            <div className="sandbox-container flex-1 flex items-center justify-center p-4 sm:p-6 bg-[#040815] overflow-hidden">
+              <div className="relative shadow-2xl rounded-xl sm:rounded-2xl border border-slate-850 bg-slate-950 transition-all duration-300 h-full flex flex-col w-full sm:w-auto"
                 style={{
                   width: previewSize === 'desktop' ? '100%' : previewSize === 'tablet' ? '768px' : '375px',
                   maxHeight: '100%'
                 }}
               >
                 {/* Virtual Browser Top Address bar */}
-                <div className="px-5 py-3 bg-slate-900/60 border-b border-slate-850 flex items-center justify-between rounded-t-2xl">
+                <div className="px-3 sm:px-5 py-2 sm:py-3 bg-slate-900/60 border-b border-slate-850 flex items-center justify-between rounded-t-xl sm:rounded-t-2xl">
                   <div className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-rose-500"></span>
-                    <span className="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                    <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-rose-500"></span>
+                    <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-amber-500"></span>
+                    <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500"></span>
                   </div>
-                  <div className="flex-1 mx-6 bg-slate-950 border border-slate-850 rounded-lg py-1 px-4 text-[10px] font-mono text-slate-500 text-center truncate flex items-center justify-center gap-1.5">
+                  <div className="flex-1 mx-2 sm:mx-6 bg-slate-950 border border-slate-850 rounded-lg py-1 px-2 sm:px-4 text-[9px] sm:text-[10px] font-mono text-slate-500 text-center truncate flex items-center justify-center gap-1.5">
                     <span className="h-1 w-1 rounded-full bg-emerald-400 animate-ping"></span>
-                    http://localhost:8080/optimal-codex-sandbox
+                    <span className="hidden sm:inline">http://localhost:8080/optimal-codex-sandbox</span>
+                    <span className="sm:hidden">localhost:8080</span>
                   </div>
-                  <ExternalLink className="h-3.5 w-3.5 text-slate-500 cursor-not-allowed" />
+                  <ExternalLink className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-500 cursor-not-allowed" />
                 </div>
 
                 {/* Actual responsive dynamic Iframe */}
