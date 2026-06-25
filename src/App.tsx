@@ -224,7 +224,7 @@ window.resetApp = function() {
   });
 
   // Left panel view inside Workspace (Files vs Chat Settings)
-  const [editorActiveTab, setEditorActiveTab] = useState<'chat' | 'files'>('chat');
+  const [editorActiveTab, setEditorActiveTab] = useState<'chat' | 'files' | 'review'>('chat');
   const [activeFile, setActiveFile] = useState<keyof ProjectFiles>('index.html');
   const [workspaceLogs, setWorkspaceLogs] = useState<string[]>([
     'Optimal AI Codex initialized.',
@@ -1355,6 +1355,14 @@ window.resetApp = function() {
               >
                 <Code className="h-3.5 w-3.5" /> Code Explorer
               </button>
+              <button 
+                onClick={() => setEditorActiveTab('review')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-bold rounded-lg transition-all ${
+                  editorActiveTab === 'review' ? 'bg-slate-900 text-indigo-400 border border-slate-800' : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Eye className="h-3.5 w-3.5" /> Review
+              </button>
             </div>
 
             {/* AI CHAT AND PROMPT VIEW */}
@@ -1597,6 +1605,183 @@ window.resetApp = function() {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* REVIEW / RESULTS PANEL */}
+            {editorActiveTab === 'review' && (
+              <div className="flex-1 flex flex-col h-full overflow-y-auto p-5 space-y-6">
+                
+                {/* Generation Stats Overview */}
+                <div className="bg-gradient-to-br from-indigo-950/30 via-slate-900/50 to-slate-950 rounded-2xl border border-indigo-500/20 p-5 space-y-4">
+                  <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-indigo-400" /> Generation Review
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
+                      <span className="text-lg font-bold font-mono text-indigo-400">{chatHistory.length}</span>
+                      <p className="text-[10px] text-slate-500 uppercase mt-1">Generations</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
+                      <span className="text-lg font-bold font-mono text-emerald-400">{Object.keys(projectFiles).length}</span>
+                      <p className="text-[10px] text-slate-500 uppercase mt-1">Files</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
+                      <span className="text-lg font-bold font-mono text-amber-400">
+                        {Math.round((projectFiles['index.html'].length + projectFiles['styles.css'].length + projectFiles['app.js'].length) / 1024 * 10) / 10}
+                      </span>
+                      <p className="text-[10px] text-slate-500 uppercase mt-1">KB Total</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-center">
+                      <span className="text-lg font-bold font-mono text-violet-400">{selectedModel.name.split(':')[0]}</span>
+                      <p className="text-[10px] text-slate-500 uppercase mt-1">Engine</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Generation History */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <Clock className="h-3.5 w-3.5 text-indigo-400" /> Generation History
+                  </h3>
+                  
+                  {chatHistory.length === 0 ? (
+                    <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-8 text-center">
+                      <Sparkles className="h-8 w-8 text-slate-700 mx-auto mb-3" />
+                      <p className="text-xs text-slate-500">No generations yet</p>
+                      <p className="text-[10px] text-slate-600 mt-1">Use AI Prompter to generate code</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {chatHistory.slice().reverse().map((msg, i) => (
+                        <div key={i} className="bg-slate-900/40 border border-slate-800 rounded-xl p-3 hover:border-indigo-500/30 transition-all cursor-pointer"
+                          onClick={() => {
+                            setEditorActiveTab('chat');
+                          }}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-slate-200 truncate">{msg.content.slice(0, 80) || 'Code Generation'}</p>
+                              <p className="text-[10px] text-slate-500 mt-1">
+                                {msg.modelUsed || selectedModel.name} • {msg.latency ? `${msg.latency}ms` : 'N/A'}
+                              </p>
+                            </div>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                              msg.role === 'assistant' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-800 text-slate-400'
+                            }`}>
+                              {msg.role === 'assistant' ? 'AI' : 'User'}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Code Diff Preview */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <FileText className="h-3.5 w-3.5 text-emerald-400" /> Current Code Summary
+                  </h3>
+                  
+                  <div className="space-y-2">
+                    {Object.entries(projectFiles).map(([filename, content]) => (
+                      <div key={filename} className="bg-slate-900/40 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Code className="h-3.5 w-3.5 text-indigo-400" />
+                          <span className="text-xs font-mono text-slate-300">{filename}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] text-slate-500">{content.split('\n').length} lines</span>
+                          <span className="text-[10px] text-slate-500">{Math.round(content.length / 1024 * 10) / 10} KB</span>
+                          <button 
+                            onClick={() => {
+                              setActiveFile(filename as 'index.html' | 'styles.css' | 'app.js');
+                              setEditorActiveTab('files');
+                            }}
+                            className="text-[10px] text-indigo-400 hover:text-indigo-300 transition-all"
+                          >
+                            View →
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <Zap className="h-3.5 w-3.5 text-amber-400" /> Quick Actions
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <button 
+                      onClick={() => {
+                        handleCompileCode();
+                        addLog('[Review] Re-compiled all workspace files');
+                      }}
+                      className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 hover:border-indigo-500/30 hover:text-indigo-400 transition-all flex items-center gap-2"
+                    >
+                      <Play className="h-3.5 w-3.5" /> Recompile
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const blob = new Blob([projectFiles['index.html']], { type: 'text/html' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'index.html';
+                        a.click();
+                        addLog('[Review] Exported index.html');
+                      }}
+                      className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 hover:border-emerald-500/30 hover:text-emerald-400 transition-all flex items-center gap-2"
+                    >
+                      <Download className="h-3.5 w-3.5" /> Export HTML
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setEditorActiveTab('chat');
+                        addLog('[Review] Switched to AI Prompter for new generation');
+                      }}
+                      className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 hover:border-violet-500/30 hover:text-violet-400 transition-all flex items-center gap-2"
+                    >
+                      <Sparkles className="h-3.5 w-3.5" /> New Prompt
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setProjectFiles({
+                          'index.html': '<!DOCTYPE html>\n<html><head><title>Reset</title></head><body class="bg-slate-950 text-white min-h-screen flex items-center justify-center"><h1 class="text-2xl">Workspace Reset</h1></body></html>',
+                          'styles.css': 'body { font-family: system-ui; }',
+                          'app.js': '// Fresh start'
+                        });
+                        handleCompileCode();
+                        addLog('[Review] Workspace reset to default');
+                      }}
+                      className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 hover:border-rose-500/30 hover:text-rose-400 transition-all flex items-center gap-2"
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" /> Reset
+                    </button>
+                  </div>
+                </div>
+
+                {/* Model Info */}
+                <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-4 space-y-2">
+                  <h3 className="text-xs font-bold text-slate-400 flex items-center gap-2">
+                    <Star className="h-3.5 w-3.5 text-amber-400" /> Active Model
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-white">{selectedModel.name}</p>
+                      <p className="text-[10px] text-slate-500">{selectedModel.description}</p>
+                    </div>
+                    <span className="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded-full border border-indigo-500/20">
+                      {selectedModel.pricing}
+                    </span>
+                  </div>
+                </div>
+
               </div>
             )}
 
